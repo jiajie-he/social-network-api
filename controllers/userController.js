@@ -1,4 +1,6 @@
 const User = require('../models/User');
+const Thought = require('../models/Thought');
+
 
 module.exports = {
     getUsers(req, res) {
@@ -15,7 +17,7 @@ module.exports = {
     },
     getOneUser(req, res) {
         User.findOne({ _id: req.params.userId })
-            // .populate('thoughts')
+            .populate('thoughts')
             .populate('friends')
             .then((userData) => {
                 if (!userData) {
@@ -23,9 +25,7 @@ module.exports = {
                 }
                 res.json(userData)
             })
-            .catch((err) => {
-                res.status(500).json(err)
-            })
+            .catch((err) => res.status(500).json(err))
     },
     updateUser(req, res) {
         User.findOneAndUpdate(
@@ -41,7 +41,7 @@ module.exports = {
                 }
                 res.json(updateUser)
             })
-            .catch((err) => { res.status(500).json(err) })
+            .catch((err) => res.status(500).json(err))
     },
     removeUser(req, res) {
         User.findByIdAndDelete({ _id: req.params.userId })
@@ -51,7 +51,7 @@ module.exports = {
                 }
                 res.json(removeUser)
             })
-            .catch((err) => { res.status(500).json(err) })
+            .catch((err) => res.status(500).json(err))
     },
     postFriend(req, res) {
         User.findOneAndUpdate(
@@ -66,7 +66,7 @@ module.exports = {
             }
             res.json(addFriend);
           })
-          .catch((err) => { res.status(500).json(err) })
+          .catch((err) => res.status(500).json(err))
       },
       removeFriend(req, res) {
         User.findOneAndUpdate(
@@ -81,8 +81,6 @@ module.exports = {
             }
             res.json(deleteFriend);
           })
-          .catch((err) => {
-            res.status(500).json(err);
-          });
+          .catch((err) => res.status(500).json(err))
       }
 }
