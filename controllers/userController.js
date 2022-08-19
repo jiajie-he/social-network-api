@@ -24,7 +24,6 @@ module.exports = {
                 res.json(userData)
             })
             .catch((err) => {
-                console.log(err)
                 res.status(500).json(err)
             })
     },
@@ -45,12 +44,45 @@ module.exports = {
             .catch((err) => { res.status(500).json(err) })
     },
     removeUser(req, res) {
-        User.findByIdAndDelete({_id: req.params.userId})
-        .then((removeUser) => {
-            if (!removeUser) {
+        User.findByIdAndDelete({ _id: req.params.userId })
+            .then((removeUser) => {
+                if (!removeUser) {
+                    return res.status(404).json({ message: "invalid ID" })
+                }
+                res.json(removeUser)
+            })
+            .catch((err) => { res.status(500).json(err) })
+    },
+    postFriend(req, res) {
+        User.findOneAndUpdate(
+            { _id: req.params.userId }, 
+            { 
+                $addToSet: { friends: req.params.friendId }
+            }, 
+            { new: true })
+          .then((addFriend) => {
+            if (!addFriend) {
                 return res.status(404).json({ message: "invalid ID" })
             }
-            res.json(removeUser)
-        })
-        .catch((err) => { res.status(500).json(err) })    }
+            res.json(addFriend);
+          })
+          .catch((err) => { res.status(500).json(err) })
+      },
+      removeFriend(req, res) {
+        User.findOneAndUpdate(
+            { _id: req.params.userId }, 
+            { 
+                $pull: { friends: req.params.friendId }
+            }, 
+            { new: true })
+          .then((deleteFriend) => {
+            if (!deleteFriend) {
+                return res.status(404).json({ message: "invalid ID" })
+            }
+            res.json(deleteFriend);
+          })
+          .catch((err) => {
+            res.status(500).json(err);
+          });
+      }
 }
