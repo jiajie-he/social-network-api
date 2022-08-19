@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
 const reactionSchema = require('./Reaction');
+// const time = require('../utils/time');
 const thoughtSchema = new Schema(
     {
         thoughtText: {
@@ -10,7 +11,8 @@ const thoughtSchema = new Schema(
         },
         createdAt: {
             type: Date,
-            //set default
+            //set default native JavaScript
+            default: new Date
             //format timestamp on query
         },
         username: {
