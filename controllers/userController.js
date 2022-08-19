@@ -43,5 +43,14 @@ module.exports = {
                 res.json(updateUser)
             })
             .catch((err) => { res.status(500).json(err) })
-    }
+    },
+    removeUser(req, res) {
+        User.findByIdAndDelete({_id: req.params.userId})
+        .then((removeUser) => {
+            if (!removeUser) {
+                return res.status(404).json({ message: "invalid ID" })
+            }
+            res.json(removeUser)
+        })
+        .catch((err) => { res.status(500).json(err) })    }
 }
