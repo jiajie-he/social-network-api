@@ -51,7 +51,7 @@ module.exports = {
             .catch((err) => res.status(500).json(err))
     },
     removeThought(req, res) {
-        Thought.findByIdAndDelete({ _id: req.params.thoughtId })
+        Thought.findOneAndRemove({ _id: req.params.thoughtId })
             .then((removeThought) => {
                 if (!removeThought) {
                     return res.status(404).json({ message: "invalid ID" })

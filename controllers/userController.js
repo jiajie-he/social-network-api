@@ -49,8 +49,11 @@ module.exports = {
                 if (!removeUser) {
                     return res.status(404).json({ message: "invalid ID" })
                 }
-                res.json(removeUser)
+                return Thought.deleteMany(
+                    {_id:{$in:removeUser.thoughts}}
+                    )
             })
+            .then(() => res.json({message:'removed'}))
             .catch((err) => res.status(500).json(err))
     },
     postFriend(req, res) {
