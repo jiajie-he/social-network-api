@@ -19,11 +19,11 @@ module.exports = {
         User.findOne({ _id: req.params.userId })
             .populate('thoughts')
             .populate('friends')
-            .then((userData) => {
-                if (!userData) {
+            .then((user) => {
+                if (!user) {
                     return res.status(404).json({ message: "invalid ID" })
                 }
-                res.json(userData)
+                res.json(user)
             })
             .catch((err) => res.status(500).json(err))
     },

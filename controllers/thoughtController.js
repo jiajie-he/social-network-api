@@ -23,5 +23,53 @@ module.exports = {
             res.json(userData)
         })
         .catch((err) => res.status(500).json(err))
-    }
+    },
+    getOneThought(req, res) {
+        Thought.findOne({ _id: req.params.thoughtId })
+            .then((thought) => {
+                if (!thought) {
+                    return res.status(404).json({ message: "invalid ID" })
+                }
+                res.json(thought)
+            })
+            .catch((err) => res.status(500).json(err))
+    },
+    updateThought(req, res) {
+        Thought.findOneAndUpdate(
+            { _id: req.params.thoughtId },
+            { $set: req.body },
+            {
+                runValidators: true,
+                new: true
+            })
+            .then((updateThought) => {
+                if (!updateThought) {
+                    return res.status(404).json({ message: "invalid ID" })
+                }
+                res.json(updateThought)
+            })
+            .catch((err) => res.status(500).json(err))
+    },
+    removeThought(req, res) {
+        Thought.findByIdAndDelete({ _id: req.params.thoughtId })
+            .then((removeThought) => {
+                if (!removeThought) {
+                    return res.status(404).json({ message: "invalid ID" })
+                }
+                return User.findOneAndUpdate(
+                    { thoughts: req.params.thoughtId },
+                    { $pull: { thoughts: req.params.thoughtId } },
+                    { new: true }
+                  )
+            })
+            .then((userData) => {
+                if (!userData) {
+                    return res.status(404).json({ message: "invalid ID" })
+                }
+                res.json(userData)
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).json(err);
+              })    },
 }
